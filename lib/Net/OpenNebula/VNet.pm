@@ -8,7 +8,7 @@
   
 
 package Net::OpenNebula::VNet;
-$Net::OpenNebula::VNet::VERSION = '0.2.0';
+$Net::OpenNebula::VNet::VERSION = '0.2';
 use strict;
 use warnings;
 

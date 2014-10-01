@@ -7,7 +7,7 @@
    
 
 package Net::OpenNebula::Template;
-$Net::OpenNebula::Template::VERSION = '0.2.0';
+$Net::OpenNebula::Template::VERSION = '0.2';
 use strict;
 use warnings;
 

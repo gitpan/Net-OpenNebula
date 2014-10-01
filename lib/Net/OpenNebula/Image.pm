@@ -7,7 +7,7 @@
    
 
 package Net::OpenNebula::Image;
-$Net::OpenNebula::Image::VERSION = '0.2.0';
+$Net::OpenNebula::Image::VERSION = '0.2';
 use strict;
 use warnings;
 

@@ -28,7 +28,7 @@ Query the Hoststatus of an OpenNebula host.
 =cut
 
 package Net::OpenNebula::Host;
-$Net::OpenNebula::Host::VERSION = '0.2.0';
+$Net::OpenNebula::Host::VERSION = '0.2';
 use strict;
 use warnings;
 

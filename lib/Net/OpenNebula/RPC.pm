@@ -1,5 +1,5 @@
 package Net::OpenNebula::RPC;
-$Net::OpenNebula::RPC::VERSION = '0.2.0';
+$Net::OpenNebula::RPC::VERSION = '0.2';
 use strict;
 use warnings;
 

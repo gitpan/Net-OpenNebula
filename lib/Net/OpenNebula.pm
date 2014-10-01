@@ -27,7 +27,7 @@ With this module you can access the OpenNebula XML-RPC service.
 =cut
 
 package Net::OpenNebula;
-$Net::OpenNebula::VERSION = '0.2.0';
+$Net::OpenNebula::VERSION = '0.2';
 use strict;
 use warnings;
 

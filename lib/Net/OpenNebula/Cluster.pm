@@ -8,7 +8,7 @@
   
 
 package Net::OpenNebula::Cluster;
-$Net::OpenNebula::Cluster::VERSION = '0.2.0';
+$Net::OpenNebula::Cluster::VERSION = '0.2';
 use strict;
 use warnings;
 
