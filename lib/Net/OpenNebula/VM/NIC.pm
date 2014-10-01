@@ -6,7 +6,7 @@
 #
    
 package Net::OpenNebula::VM::NIC;
-
+$Net::OpenNebula::VM::NIC::VERSION = '0.1.0';
 use strict;
 use warnings;
 

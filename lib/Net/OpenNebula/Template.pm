@@ -7,26 +7,15 @@
    
 
 package Net::OpenNebula::Template;
-
+$Net::OpenNebula::Template::VERSION = '0.1.0';
 use strict;
 use warnings;
 
-use Data::Dumper;
+use Net::OpenNebula::RPC;
+push our @ISA , qw(Net::OpenNebula::RPC);
 
-sub new {
-   my $that = shift;
-   my $proto = ref($that) || $that;
-   my $self = { @_ };
-
-   bless($self, $proto);
-
-   return $self;
-}
-
-sub id {
-   my ($self) = @_;
-   return $self->{data}->{ID}->[0];
-}
+use constant ONERPC => 'template';
+use constant ONEPOOLKEY => 'VMTEMPLATE';
 
 sub name {
    my ($self) = @_;
@@ -35,6 +24,7 @@ sub name {
    return $self->{extended_data}->{NAME}->[0];
 }
 
+
 sub get_template_ref {
    my ($self) = @_;
    $self->_get_info();
@@ -42,18 +32,32 @@ sub get_template_ref {
    return { TEMPLATE => $self->{extended_data}->{TEMPLATE} };
 }
 
-sub _get_info {
-   my ($self) = @_;
-
-   if(! exists $self->{extended_data}) {
-      $self->{extended_data} = $self->{rpc}->_rpc("one.template.info", [ int => $self->id ]);
-   }
-}
 
 sub get_data {
    my ($self) = @_;
    $self->_get_info;
    return $self->{extended_data};
+}
+
+
+sub create {
+   my ($self, $tpl_txt) = @_;
+   return $self->_allocate([ string => $tpl_txt ]);
+}
+
+
+sub instantiate {
+    my ($self, %options) = @_;
+
+    my @args = ([ int => $self->id ]);
+
+    push(@args, [ string => $options{name} || "" ] );
+    push(@args, [ boolean => $options{onhold} || 0 ] );
+    push(@args, [ string => $options{extra} || "" ] );
+
+    my $vmid = $self->_onerpc("instantiate", @args);
+    
+    return $vmid;
 }
 
 1;

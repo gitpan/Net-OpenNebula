@@ -8,21 +8,13 @@
   
 
 package Net::OpenNebula::Cluster;
-
+$Net::OpenNebula::Cluster::VERSION = '0.1.0';
 use strict;
 use warnings;
 
-use Data::Dumper;
+use Net::OpenNebula::RPC;
+push our @ISA , qw(Net::OpenNebula::RPC);
 
-sub new {
-   my $that = shift;
-   my $proto = ref($that) || $that;
-   my $self = { @_ };
-
-   bless($self, $proto);
-
-   return $self;
-}
-
+use constant ONERPC => 'cluster';
 
 1;
