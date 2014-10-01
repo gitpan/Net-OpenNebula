@@ -7,7 +7,7 @@
    
 
 package Net::OpenNebula::User;
-$Net::OpenNebula::User::VERSION = '0.1.0';
+$Net::OpenNebula::User::VERSION = '0.2.0';
 use strict;
 use warnings;
 

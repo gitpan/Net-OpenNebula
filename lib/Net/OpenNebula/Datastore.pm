@@ -7,7 +7,7 @@
    
 
 package Net::OpenNebula::Datastore;
-$Net::OpenNebula::Datastore::VERSION = '0.1.0';
+$Net::OpenNebula::Datastore::VERSION = '0.2.0';
 use strict;
 use warnings;
 

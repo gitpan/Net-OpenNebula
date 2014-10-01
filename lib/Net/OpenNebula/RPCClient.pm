@@ -1,5 +1,5 @@
 package Net::OpenNebula::DummyLogger;
-$Net::OpenNebula::DummyLogger::VERSION = '0.1.0';
+$Net::OpenNebula::DummyLogger::VERSION = '0.2.0';
 use strict;
 use warnings;
 
@@ -22,7 +22,7 @@ use strict 'refs';
 
 
 package Net::OpenNebula::RPCClient;
-$Net::OpenNebula::RPCClient::VERSION = '0.1.0';
+$Net::OpenNebula::RPCClient::VERSION = '0.2.0';
 use strict;
 use warnings;
 
