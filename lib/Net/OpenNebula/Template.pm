@@ -4,13 +4,11 @@
 # vim: set ts=3 sw=3 tw=0:
 # vim: set expandtab:
 #
-   
-
-package Net::OpenNebula::Template;
-$Net::OpenNebula::Template::VERSION = '0.2';
 use strict;
 use warnings;
 
+package Net::OpenNebula::Template;
+$Net::OpenNebula::Template::VERSION = '0.2.2';
 use Net::OpenNebula::RPC;
 push our @ISA , qw(Net::OpenNebula::RPC);
 
@@ -19,17 +17,17 @@ use constant ONEPOOLKEY => 'VMTEMPLATE';
 
 sub name {
    my ($self) = @_;
-   $self->_get_info();
+   my $name = $self->_get_info_extended('NAME');
 
-   return $self->{extended_data}->{NAME}->[0];
+   return $name->[0];
 }
 
 
 sub get_template_ref {
    my ($self) = @_;
-   $self->_get_info();
+   my $template = $self->_get_info_extended('TEMPLATE');
 
-   return { TEMPLATE => $self->{extended_data}->{TEMPLATE} };
+   return { TEMPLATE => $template };
 }
 
 

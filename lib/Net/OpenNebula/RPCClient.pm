@@ -1,8 +1,9 @@
-package Net::OpenNebula::DummyLogger;
-$Net::OpenNebula::DummyLogger::VERSION = '0.2';
 use strict;
 use warnings;
 
+# packge the DummyLogger together with the RPCClient package
+package Net::OpenNebula::DummyLogger; ## no critic
+$Net::OpenNebula::DummyLogger::VERSION = '0.2.2';
 sub new {
     my $that = shift;
     my $proto = ref($that) || $that;
@@ -14,7 +15,7 @@ sub new {
 }
 
 # Mock basic methods of Log4Perl getLogger instance
-no strict 'refs';
+no strict 'refs'; ## no critic
 foreach my $i (qw(error warn info verbose debug)) {
     *{$i} = sub {}
 }
@@ -22,14 +23,13 @@ use strict 'refs';
 
 
 package Net::OpenNebula::RPCClient;
-$Net::OpenNebula::RPCClient::VERSION = '0.2';
-use strict;
-use warnings;
-
+$Net::OpenNebula::RPCClient::VERSION = '0.2.2';
 use XML::Simple;
 use RPC::XML;
 use RPC::XML::Client;
 use Data::Dumper;
+
+use version;
 
 # options
 #    user: user to connect
@@ -54,6 +54,9 @@ sub new {
     bless($self, $proto);
 
     $self->{log}->debug(2, "Initialised with user $self->{user} and url $self->{url}.");
+
+    # Cache and test rpc
+    $self->version();
 
     return $self;
 }
@@ -97,6 +100,12 @@ sub _rpc {
     }
     
     my $resp = $cli->send_request($req);
+    
+    if(!ref($resp)) {
+        $self->error("_rpc send_request failed with message: $resp");
+        return;
+    }
+    
     my $ret = $resp->value;
     
     if(ref($ret) ne "ARRAY") {
@@ -106,7 +115,7 @@ sub _rpc {
     
     elsif($ret->[0] == 1) {
         $self->debug(5, "_rpc RPC answer $ret->[1]");
-        if($ret->[1] =~ m/^\d+$/) {
+        if($ret->[1] =~ m/^(\d|\.)+$/) {
             return $ret->[1];
         }
         else {
@@ -119,14 +128,35 @@ sub _rpc {
         if( $self->{fail_on_rpc_fail}) {
             die("error sending request.");
         } else {
-            return undef;
+            return;
         }
     }   
 
 }
 
+
+sub version {
+    my ($self) = @_;
+    
+    # cached value
+    if(exists($self->{_version})) {
+        return $self->{_version};
+    }
+    my $version = $self->_rpc("one.system.version");
+
+    if(defined($version)) {
+        $self->verbose("Version $version found");
+        $self->{_version} = version->new($version);
+        return $self->{_version};
+    } else {
+        $self->error("Failed to retrieve version");
+        return;
+    }
+}
+
+
 # add logging shortcuts
-no strict 'refs';
+no strict 'refs'; ## no critic
 foreach my $i (qw(error warn info verbose debug)) {
     *{$i} = sub {
         my ($self, @args) = @_;

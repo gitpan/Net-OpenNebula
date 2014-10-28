@@ -1,8 +1,8 @@
-package Net::OpenNebula::RPC;
-$Net::OpenNebula::RPC::VERSION = '0.2';
 use strict;
 use warnings;
 
+package Net::OpenNebula::RPC;
+$Net::OpenNebula::RPC::VERSION = '0.2.2';
 use Data::Dumper;
 
 use constant ONERPC => 'rpc';
@@ -69,6 +69,25 @@ sub _get_info {
 
     if(! exists $self->{extended_data} || (exists $option{clearcache} && $option{clearcache} == 1)) {
         $self->{extended_data} = $self->_onerpc("info", [ int => $id ]);
+    }
+}
+
+# Similar to _get_info, but will try with with clearcache if C<entry> can't be 
+# found in extended_data and it returns the entry in extended_data. 
+sub _get_info_extended {
+    my ($self, $entry) = @_;
+    $self->_get_info();
+    
+    if(! exists $self->{extended_data}->{$entry}) {
+        $self->_get_info(clearcache => 1);
+    }
+
+    if(exists $self->{extended_data}->{$entry}) {
+        $self->debug(2, "Entry $entry present in extended_data");    
+        return $self->{extended_data}->{$entry};
+    } else {
+        $self->debug(2, "Entry $entry still not present in extended_data");    
+        return []; # empty array ref
     }
 }
 
@@ -197,7 +216,7 @@ sub wait_for_state {
 }
 
 # add logging shortcuts
-no strict 'refs';
+no strict 'refs'; ## no critic
 foreach my $i (qw(error warn info verbose debug)) {
     *{$i} = sub {
         my ($self, @args) = @_;

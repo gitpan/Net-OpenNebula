@@ -5,7 +5,9 @@ MANIFEST
 META.yml
 Makefile.PL
 README
+build/dist.spec
 dist.ini
+dist_rpm.ini
 lib/Net/OpenNebula.pm
 lib/Net/OpenNebula/Cluster.pm
 lib/Net/OpenNebula/Datastore.pm

@@ -4,13 +4,11 @@
 # vim: set ts=3 sw=3 tw=0:
 # vim: set expandtab:
 #
-   
-
-package Net::OpenNebula::Datastore;
-$Net::OpenNebula::Datastore::VERSION = '0.2';
 use strict;
 use warnings;
 
+package Net::OpenNebula::Datastore;
+$Net::OpenNebula::Datastore::VERSION = '0.2.2';
 use Net::OpenNebula::RPC;
 push our @ISA , qw(Net::OpenNebula::RPC);
 
@@ -33,8 +31,8 @@ sub create {
 
 sub used {
    my ($self) = @_;
-   $self->_get_info();
-   if ($self->{extended_data}->{IMAGES}->[0]->{ID}->[0]) {
+   my $img = $self->_get_info_extended('IMAGES');
+   if (defined($img->[0]->{ID}->[0])) {
        return 1;
    } 
 };

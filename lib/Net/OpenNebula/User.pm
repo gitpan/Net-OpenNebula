@@ -4,13 +4,11 @@
 # vim: set ts=3 sw=3 tw=0:
 # vim: set expandtab:
 #
-   
-
-package Net::OpenNebula::User;
-$Net::OpenNebula::User::VERSION = '0.2';
 use strict;
 use warnings;
 
+package Net::OpenNebula::User;
+$Net::OpenNebula::User::VERSION = '0.2.2';
 use Net::OpenNebula::RPC;
 push our @ISA , qw(Net::OpenNebula::RPC);
 

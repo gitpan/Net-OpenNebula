@@ -4,6 +4,8 @@
 # vim: set ts=3 sw=3 tw=0:
 # vim: set expandtab:
 #
+use strict;
+use warnings;
 
 =head1 NAME
 
@@ -28,27 +30,27 @@ Query the Hoststatus of an OpenNebula host.
 =cut
 
 package Net::OpenNebula::Host;
-$Net::OpenNebula::Host::VERSION = '0.2';
-use strict;
-use warnings;
-
+$Net::OpenNebula::Host::VERSION = '0.2.2';
 use Net::OpenNebula::RPC;
 push our @ISA , qw(Net::OpenNebula::RPC);
 
 use constant ONERPC => 'host';
 
+# From include/Host.h
+use constant STATES => qw(INIT MONITORING_MONITORED MONITORED ERROR DISABLED MONITORING_ERROR MONITORING_INIT MONITORING_DISABLED);
+
 sub name {
    my ($self) = @_;
-   $self->_get_info();
+   my $name = $self->_get_info_extended('NAME');
 
-   return $self->{extended_data}->{NAME}->[0];
+   return $name->[0];
 }
 
 sub vms {
    my ($self) = @_;
-   $self->_get_info();
+   my $vms = $self->_get_info_extended('VMS');
    my @ret;
-   for my $vm_id (@{ $self->{extended_data}->{VMS}->[0]->{ID} }) {
+   for my $vm_id (@{ $vms->[0]->{ID} }) {
       push @ret, $self->{rpc}->get_vm($vm_id);
    }
 
@@ -57,10 +59,59 @@ sub vms {
 
 sub used {
    my ($self) = @_;
-   $self->_get_info();
-   if ($self->{extended_data}->{HOST_SHARE}->[0]->{RUNNING_VMS}->[0]) {
+   my $hs = $self->_get_info_extended('HOST_SHARE');
+   if (defined($hs->[0]->{RUNNING_VMS}->[0])) {
        return 1;
    } 
 };
+
+
+# Use private _enable for the rpc enable interface
+sub _enable {
+    my ($self, $bool) = @_;
+
+    return $self->_onerpc("enable",
+                          [ int => $self->id ],
+                          [ boolean => $bool ],
+                         );
+}
+
+sub enable {
+    my $self = shift;
+    return $self->_enable(1);
+}
+
+sub disable {
+    my ($self) = @_;
+    return $self->_enable(0);
+}
+
+# Return the state as string
+sub state {
+   my ($self) = @_;
+
+   # Needs to be up to date info
+   $self->_get_info_(clearcache => 1);
+
+   my $state = $self->{extended_data}->{STATE}->[0];
+
+   if(!defined($state)) {
+       $self->warn('Undefined '.ONERPC.'-state for id ', $self->id);
+       return;
+   } 
+
+   return (STATES)[$state];
+};
+
+# also from include/Host.h
+sub is_enabled {
+    my $self = shift;
+    return $self->state() =~ m/DISABLED$/;
+}
+
+sub is_monitoring {
+    my $self = shift;
+    return $self->state() =~ m/^MONITORING_$/;
+}
 
 1;

@@ -4,12 +4,11 @@
 # vim: set ts=3 sw=3 tw=0:
 # vim: set expandtab:
 #
-   
-package Net::OpenNebula::VM::NIC;
-$Net::OpenNebula::VM::NIC::VERSION = '0.2';
 use strict;
 use warnings;
 
+package Net::OpenNebula::VM::NIC;
+$Net::OpenNebula::VM::NIC::VERSION = '0.2.2';
 sub new {
    my $that = shift;
    my $proto = ref($that) || $that;

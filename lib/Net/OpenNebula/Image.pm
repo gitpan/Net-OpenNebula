@@ -4,13 +4,11 @@
 # vim: set ts=3 sw=3 tw=0:
 # vim: set expandtab:
 #
-   
-
-package Net::OpenNebula::Image;
-$Net::OpenNebula::Image::VERSION = '0.2';
 use strict;
 use warnings;
 
+package Net::OpenNebula::Image;
+$Net::OpenNebula::Image::VERSION = '0.2.2';
 use Net::OpenNebula::RPC;
 push our @ISA , qw(Net::OpenNebula::RPC);
 
@@ -21,9 +19,9 @@ use constant STATES => qw(INIT READY USED DISABLED LOCKED ERROR CLONE DELETE USE
 
 sub name {
    my ($self) = @_;
-   $self->_get_info();
+   my $name = $self->_get_info_extended('NAME');
 
-   return $self->{extended_data}->{NAME}->[0];
+   return $name->[0];
 }
 
 sub create {
@@ -45,6 +43,12 @@ sub state {
    $self->_get_info(clearcache => 1);
 
    my $state = $self->{extended_data}->{STATE}->[0];
+
+   if(!defined($state)) {
+       $self->warn('Undefined '.ONERPC.'-state for id ', $self->id);
+       return;
+   } 
+
    return (STATES)[$state];    
 };
 

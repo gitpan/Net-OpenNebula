@@ -4,6 +4,8 @@
 # vim: set ts=3 sw=3 tw=0:
 # vim: set expandtab:
 # 
+use strict;
+use warnings;
 
 =head1 NAME
 
@@ -27,10 +29,7 @@ With this module you can access the OpenNebula XML-RPC service.
 =cut
 
 package Net::OpenNebula;
-$Net::OpenNebula::VERSION = '0.2';
-use strict;
-use warnings;
-
+$Net::OpenNebula::VERSION = '0.2.2';
 use Net::OpenNebula::RPCClient;
 push our @ISA , qw(Net::OpenNebula::RPCClient);
 
@@ -83,7 +82,7 @@ sub get_host {
        if( $self->{fail_on_rpc_fail}) {
            die($msg);
        } else {
-           return undef;
+           return;
        }
    }
 
@@ -113,7 +112,7 @@ sub get_vm {
        if( $self->{fail_on_rpc_fail}) {
            die($msg);
        } else {
-           return undef;
+           return;
        }
    }
 
