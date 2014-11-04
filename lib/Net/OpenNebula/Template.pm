@@ -8,7 +8,7 @@ use strict;
 use warnings;
 
 package Net::OpenNebula::Template;
-$Net::OpenNebula::Template::VERSION = '0.2.2';
+$Net::OpenNebula::Template::VERSION = '0.300.0';
 use Net::OpenNebula::RPC;
 push our @ISA , qw(Net::OpenNebula::RPC);
 

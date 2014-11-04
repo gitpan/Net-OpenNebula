@@ -30,7 +30,7 @@ Query the Hoststatus of an OpenNebula host.
 =cut
 
 package Net::OpenNebula::Host;
-$Net::OpenNebula::Host::VERSION = '0.2.2';
+$Net::OpenNebula::Host::VERSION = '0.300.0';
 use Net::OpenNebula::RPC;
 push our @ISA , qw(Net::OpenNebula::RPC);
 
@@ -91,7 +91,7 @@ sub state {
    my ($self) = @_;
 
    # Needs to be up to date info
-   $self->_get_info_(clearcache => 1);
+   $self->_get_info(clearcache => 1);
 
    my $state = $self->{extended_data}->{STATE}->[0];
 
@@ -106,7 +106,7 @@ sub state {
 # also from include/Host.h
 sub is_enabled {
     my $self = shift;
-    return $self->state() =~ m/DISABLED$/;
+    return $self->state() !~ m/DISABLED$/;
 }
 
 sub is_monitoring {
